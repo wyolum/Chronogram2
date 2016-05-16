@@ -15,38 +15,38 @@
 
 static char buffer[dt_MAX_STRING_LEN+1];  // must be big enough for longest string and the terminating null
 
-char monthStr1[] PROGMEM = "January";
-char monthStr2[] PROGMEM = "February";
-char monthStr3[] PROGMEM = "March";
-char monthStr4[] PROGMEM = "April";
-char monthStr5[] PROGMEM = "May";
-char monthStr6[] PROGMEM = "June";
-char monthStr7[] PROGMEM = "July";
-char monthStr8[] PROGMEM = "August";
-char monthStr9[] PROGMEM = "September";
-char monthStr10[] PROGMEM = "October";
-char monthStr11[] PROGMEM = "November";
-char monthStr12[] PROGMEM = "December";
+char const monthStr1[] PROGMEM = "January";
+char const monthStr2[] PROGMEM = "February";
+char const monthStr3[] PROGMEM = "March";
+char const monthStr4[] PROGMEM = "April";
+char const monthStr5[] PROGMEM = "May";
+char const monthStr6[] PROGMEM = "June";
+char const monthStr7[] PROGMEM = "July";
+char const monthStr8[] PROGMEM = "August";
+char const monthStr9[] PROGMEM = "September";
+char const monthStr10[] PROGMEM = "October";
+char const monthStr11[] PROGMEM = "November";
+char const monthStr12[] PROGMEM = "December";
 
-PGM_P monthNames_P[] PROGMEM = 
+PGM_P const monthNames_P[] PROGMEM = 
 {
     "",monthStr1,monthStr2,monthStr3,monthStr4,monthStr5,monthStr6,
 	monthStr7,monthStr8,monthStr9,monthStr10,monthStr11,monthStr12
 };
 
-char monthShortNames_P[] PROGMEM = "ErrJanFebMarAprMayJunJulAugSepOctNovDec";
+char const monthShortNames_P[] PROGMEM = "ErrJanFebMarAprMayJunJulAugSepOctNovDec";
 
-char dayStr0[] PROGMEM = "Err";
-char dayStr1[] PROGMEM = "Sunday";
-char dayStr2[] PROGMEM = "Monday";
-char dayStr3[] PROGMEM = "Tuesday";
-char dayStr4[] PROGMEM = "Wednesday";
-char dayStr5[] PROGMEM = "Thursday";
-char dayStr6[] PROGMEM = "Friday";
-char dayStr7[] PROGMEM = "Saturday";
+char const dayStr0[] PROGMEM = "Err";
+char const dayStr1[] PROGMEM = "Sunday";
+char const dayStr2[] PROGMEM = "Monday";
+char const dayStr3[] PROGMEM = "Tuesday";
+char const dayStr4[] PROGMEM = "Wednesday";
+char const dayStr5[] PROGMEM = "Thursday";
+char const dayStr6[] PROGMEM = "Friday";
+char const dayStr7[] PROGMEM = "Saturday";
 
-PGM_P dayNames_P[] PROGMEM = { dayStr0,dayStr1,dayStr2,dayStr3,dayStr4,dayStr5,dayStr6,dayStr7};
-char dayShortNames_P[] PROGMEM = "ErrSunMonTueWedThrFriSat";
+PGM_P const dayNames_P[] PROGMEM = { dayStr0,dayStr1,dayStr2,dayStr3,dayStr4,dayStr5,dayStr6,dayStr7};
+char const dayShortNames_P[] PROGMEM = "ErrSunMonTueWedThrFriSat";
 
 /* functions to return date strings */
 

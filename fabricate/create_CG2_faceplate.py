@@ -314,7 +314,7 @@ def create_faceplate(basename, style, case, font, fontsize, reverse=True, color=
         can.setFillColor(white)
 
     can.translate(MARGIN, MARGIN)
-    # outline().drawOn(can)
+    outline().drawOn(can)
 
     
     
@@ -453,7 +453,7 @@ def main():
                      # 'german2_v1440_%s_%s_%s' % (font, case, fontsize), 
                      # german2_v1440, 
                      cases[case], 
-                     font, fontsize, baffles=False, reverse=True, fpid=fpid)
+                     font, fontsize, baffles=False, reverse=True, fpid=fpid, do_corner_holes=True)
     bp_can = new_canvas('Backplate')
     create_backplate(bp_can)
     t = MyText(15.2 * inch, .85*inch, "MASTER", centered=False)
