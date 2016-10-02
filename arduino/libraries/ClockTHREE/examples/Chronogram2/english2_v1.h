@@ -1,4 +1,4 @@
-static prog_char HOUR_WORDS[] PROGMEM = {
+static const char HOUR_WORDS[] PROGMEM = {
      32, // # words
       0,  0,  2,       3,  0,  2,      13,  4,  3,      16,  4,  3,     // words
      19,  4,  5,      24,  4,  4,      28,  4,  4,       0,  5,  3,     // words
@@ -10,7 +10,7 @@ static prog_char HOUR_WORDS[] PROGMEM = {
       0,  0,  0,       0,  0,  0,       0,  0,  0,       0,  0,  0,     // words
 };
 
-static prog_char HOUR_SEQ[] PROGMEM = {
+static const char HOUR_SEQ[] PROGMEM = {
    4, // number of bytes per state
 //                             a                      
 //                             f  m                   
@@ -46,7 +46,7 @@ static prog_char HOUR_SEQ[] PROGMEM = {
     0b00000011, 0b00001000, 0b00000110, 0b00000000, 
     0b00000011, 0b00010000, 0b00000110, 0b00000000, 
     };
-static prog_char MINUTE_WORDS[] PROGMEM = {
+static const char MINUTE_WORDS[] PROGMEM = {
      32, // # words
       0,  6,  6,       6,  1,  3,       9,  1,  3,      12,  1,  5,     // words
      17,  1,  4,      21,  1,  4,       0,  3,  3,       7,  3,  5,     // words
@@ -58,7 +58,7 @@ static prog_char MINUTE_WORDS[] PROGMEM = {
       8,  4,  4,       0,  4,  6,       0,  4,  7,       0,  0,  0,     // words
 };
 
-static prog_char MINUTE_SEQ[] PROGMEM = {
+static const char MINUTE_SEQ[] PROGMEM = {
    4, // number of bytes per state
 //                                  s                 
 //                 ft             nee                 

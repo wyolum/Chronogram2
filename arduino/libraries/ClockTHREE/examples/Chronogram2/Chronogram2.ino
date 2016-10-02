@@ -1059,7 +1059,7 @@ void Time_to_Serial(time_t in, char *out){
  *        Each word is defined by startcol, startrow, len
  */
 
-void getword(int i, prog_char* words, uint8_t *out){
+void getword(int i, const char* words, uint8_t *out){
   out[0] = pgm_read_byte(words + 3 * i + 1);
   out[1] = pgm_read_byte(words + 3 * i + 2);
   out[2] = pgm_read_byte(words + 3 * i + 3);
@@ -1070,7 +1070,7 @@ void getword(int i, prog_char* words, uint8_t *out){
  *   i -- 0 to 287 time increment indexa
  * out -- points to column data to prepare
  */
-void getdisplay(int i, prog_char *seq, prog_char *words, uint32_t* out){
+void getdisplay(int i, const char *seq, const char *words, uint32_t* out){
   uint8_t bits;     // holds the on off state for 8 words at a time
   uint8_t word[3];  // start columm, start row, length of the current word
   uint8_t n_byte_per_step = pgm_read_byte(seq);
@@ -1148,7 +1148,7 @@ bool testRTC(){
 }
 
 #ifdef USE_USA_DST
-PROGMEM  prog_uint32_t USA_DST[]  = {
+PROGMEM  const uint32_t USA_DST[]  = {
 //       start,       stop,      // year
      952840800,  973404000,      // 2000
      984290400, 1004853600,      // 2001
