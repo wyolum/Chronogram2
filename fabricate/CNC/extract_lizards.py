@@ -2,8 +2,8 @@
 import re
 from pylab import *
 from numpy import *
-from cnc import *
-import constants
+from .cnc import *
+from . import constants
 
 can = canvas.Canvas('lizards.pdf', pagesize=(20 * inch, 12 * inch))
 scale = 2/ 6.652
@@ -89,8 +89,8 @@ for x1, y1, x2, y2 in zip(x1s, y1s, x2s, y2s):
         plot([x1, x2], [y1, y2], 'r-', alpha=.2)
 
 
-starts = zip(x1s, y1s)
-stops = zip(x2s, y2s)
+starts = list(zip(x1s, y1s))
+stops = list(zip(x2s, y2s))
 N = len(starts)
 M = len(stops)
 assert N == M
@@ -145,12 +145,12 @@ for start, stop in divs:
     pth.moveTo(*dat[0])
     [pth.lineTo(*xy) for xy in dat[1:]]
 
-print 'HEIGHT (in)', (pth.getRight() - pth.getLeft()) / inch * scale
-print ' WIDTH (in)', (pth.getTop() - pth.getBottom()) / inch * scale
+print('HEIGHT (in)', (pth.getRight() - pth.getLeft()) / inch * scale)
+print(' WIDTH (in)', (pth.getTop() - pth.getBottom()) / inch * scale)
 
 ## now find all segments that are in the middle (not on the edge).
-starts = zip(x1s, y1s)
-stops = zip(x2s, y2s)
+starts = list(zip(x1s, y1s))
+stops = list(zip(x2s, y2s))
 path = array(path)
 inside = MyPath()
 figure(1)
@@ -170,7 +170,7 @@ for start, stop in zip(starts, stops):
         plot([start[0], stop[0]], [start[1], stop[1]], 'b-')
 
 liz = [pth, inside]
-print 'len(liz[0].points)', len(liz[0].points)
+print('len(liz[0].points)', len(liz[0].points))
 liz_colors = [constants.red, constants.blue]
 colors = 'bgrpk'
 
@@ -184,7 +184,7 @@ for start, stop in divs:
     i += 1
     figure(1)
     plot(dat[:,0], dat[:,1], '%s-' % color, linewidth=5)
-    print dat
+    print(dat)
     # figure(2)
     # plot(dat[:,0], dat[:,1], '%s-' % color, linewidth=5, alpha=.5)
 TOP, RIGHT = can._pagesize
@@ -207,6 +207,6 @@ for ang in [0, 120, 240]:
 
 can.showPage()
 can.save()
-print 'wrote', can._filename
+print('wrote', can._filename)
 
 show()

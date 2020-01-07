@@ -6,14 +6,14 @@ import os.path
 
 import PIL.Image
 from numpy import array, sin, cos, dot, arange
-from constants import *
+from .constants import *
 from copy import deepcopy
 from reportlab.pdfgen import canvas
 from reportlab.graphics import renderPDF
 from reportlab.graphics.shapes import Drawing, Group, String, Circle, Rect
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, TableStyle
 
-from cnc import MyPath
+from .cnc import MyPath
 
 def create_baffle(baffle_height, 
                   baffle_thickness, 

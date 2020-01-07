@@ -1,4 +1,4 @@
-from cnc import MyPath, LASER_THICKNESS
+from .cnc import MyPath, LASER_THICKNESS
 
 MARGIN = MARGIN = LASER_THICKNESS/2
 
