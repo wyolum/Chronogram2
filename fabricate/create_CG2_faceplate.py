@@ -167,7 +167,7 @@ def add_font(fontname, path=None):
     FONTNAME = fontname.upper()
     if FONTNAME not in fontnames:
         if path is None:
-            print path
+            print(path)
             def addit(args, d, names):
                 # if 'CustomerFonts' in d:
                 #     return ## skip proprietary fonts
@@ -410,7 +410,7 @@ def create_faceplate(basename, style, case, font, fontsize, reverse=True, color=
     if save_can:
         can.showPage()
         can.save()
-        print 'wrote', can._filename
+        print('wrote', can._filename)
     try:
         can.restoreState()
     except:
@@ -420,7 +420,7 @@ def create_faceplate(basename, style, case, font, fontsize, reverse=True, color=
     return can._filename
 
 def my_upper(s):
-    return unicode(s, 'utf-8').upper()
+    return str(s, 'utf-8').upper()
 def my_lower(s):
     return s.lower()
 lower = my_lower
@@ -459,7 +459,7 @@ def main():
     t = MyText(15.2 * inch, .85*inch, "MASTER", centered=False)
     t.drawOn(bp_can)
     bp_can.save()
-    print 'wrote', bp_can._filename
+    print('wrote', bp_can._filename)
     baff_can = new_canvas("Baffles")
 
     localizer = MyPath()
@@ -485,6 +485,6 @@ def main():
     baff_can.showPage()
     baff_can.save()
 
-    print 'wrote', baff_can._filename
+    print('wrote', baff_can._filename)
 if __name__ == '__main__':
     main()
