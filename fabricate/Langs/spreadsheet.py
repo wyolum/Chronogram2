@@ -41,7 +41,7 @@ class Spreadsheet:
         else:
             col = ord(cell_str[0]) - ord('A') + 1
             for i, l in enumerate(cell_str[1:]):
-                if l in string.uppercase:
+                if l in string.ascii_uppercase:
                     col = col * 26  + ord(l) - ord('A') + 1
                 else:
                     break

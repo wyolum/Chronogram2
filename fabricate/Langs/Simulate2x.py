@@ -1,15 +1,15 @@
 import pylab as pl
 import glob
 import time
-import tkFileDialog
+import tkinter.filedialog
 import string
 import os
-from Tkinter import *
+from tkinter import *
 import sys
 import csv
 # from scipy import *
 from numpy import *
-from spreadsheet import *
+from .spreadsheet import *
 
 update_step = 300 ## numnber of seconds between frames
 hold_ms = 10    ## number of ms to hold each frame
@@ -56,9 +56,9 @@ class Wordmap:
         rows = ss.lines[start_row + 1][start_col + 1:stop_col]
         cols = ss.lines[start_row + 2][start_col + 1:stop_col]
         lens = ss.lines[start_row + 3][start_col + 1:stop_col]
-        self.rows = map(int, rows)
-        self.cols = map(int, cols)
-        self.lens = map(int, lens)
+        self.rows = list(map(int, rows))
+        self.cols = list(map(int, cols))
+        self.lens = list(map(int, lens))
         self.bitmap = get_bitmap(ss, start_row + 5, start_col + 1, n_row, n_word)
 
     def get_word(idx):
@@ -82,8 +82,8 @@ class Wordmap:
         if hex:
             outfile.write(struct.pack('B', n_word))
         else:
-            print >> outfile, 'static prog_char %s_WORDS[] PROGMEM = {' % cname
-            print >> outfile,  '    %3d, // # words' % n_word ## #words on faceplate
+            print('static prog_char %s_WORDS[] PROGMEM = {' % cname, file=outfile)
+            print('    %3d, // # words' % n_word, file=outfile) ## #words on faceplate
 
         ## define words
         for i in range(n_word):
@@ -94,23 +94,23 @@ class Wordmap:
                 if hex:
                     outfile.write('BBB', (x, y, l))
                 else:
-                    print >> outfile,  '    %3d,%3d,%3d,' % (x, y, ln),
+                    print('    %3d,%3d,%3d,' % (x, y, ln), end=' ', file=outfile)
             else:
                 if hex:
                     outfile.write('BBB', (0, 0, 0))
                 else:
-                    print >> outfile,  '      0,  0,  0,',
+                    print('      0,  0,  0,', end=' ', file=outfile)
             if i % 4 == 3:
                 if not hex:
-                    print >> outfile,  "    // words"
+                    print("    // words", file=outfile)
         if hex:
             outfile.write()
             outfile.write('B', n_word // 8)
         else:
-            print >> outfile,  '};'
-            print >> outfile,  ''
-            print >> outfile,  'static prog_char %s_SEQ[] PROGMEM = {' % cname
-            print >> outfile,  '   %s, // number of bytes per state' % (n_word // 8)
+            print('};', file=outfile)
+            print('', file=outfile)
+            print('static prog_char %s_SEQ[] PROGMEM = {' % cname, file=outfile)
+            print('   %s, // number of bytes per state' % (n_word // 8), file=outfile)
         mlen = max(lens)
         words = [w for w in self.words]
         if  len(self.words) % 8 != 0:
@@ -144,19 +144,19 @@ class Wordmap:
             if hex:
                 pass
             else:
-                print >> outfile, l
-        print >> outfile,  '   ',
+                print(l, file=outfile)
+        print('   ', end=' ', file=outfile)
         for i, bits in enumerate(self.bitmap):
             bytes = bits2bytes(bits)
             for val in bytes:
                 if hex:
                     outfile.write('B', val)
                 else:
-                    print >> outfile,  '%s,' % uint8_2_bits(val),
+                    print('%s,' % uint8_2_bits(val), end=' ', file=outfile)
             if not hex:
-                print >> outfile,  "\n   ",
+                print("\n   ", end=' ', file=outfile)
         if not hex:
-            print >> outfile,  '};'
+            print('};', file=outfile)
         
 def readwtf(csvfile):
     f = csv.reader(open(csvfile))
@@ -174,8 +174,8 @@ def readwtf(csvfile):
     # n_min_word = getAssignment(ss.getCell('A7'), name_ck='n_min_word')
     # n_sec_word = getAssignment(ss.getCell('A8'), name_ck='n_sec_word')
 
-    print 'n_row', n_row
-    print 'n_col', n_col
+    print('n_row', n_row)
+    print('n_col', n_col)
     # print 'n_min_word', n_min_word
     # print 'n_sec_word', n_sec_word
     start_row, start_col = ss.parsecell('C3')
@@ -212,22 +212,22 @@ def readwtf(csvfile):
 
 def readcsv(csvfile, n_row=8):
     f = csv.reader(open(csvfile))
-    letters = [f.next() for i in range(n_row)]
-    rows = f.next()
-    cols = f.next()
-    lens = f.next()
+    letters = [next(f) for i in range(n_row)]
+    rows = next(f)
+    cols = next(f)
+    lens = next(f)
     words = f.next()[1:]
     n_word = len(words)
     bitmap = zeros((288, n_word), int)
     for i in range(288):
-        l = f.next()
+        l = next(f)
         for j, c in enumerate(l[1:]):
             if c:
                 bitmap[i, j] = 1
     minutes_hack = list(f)
     if len(minutes_hack):
-        min_rows = map(int, minutes_hack[0][1:])
-        min_cols = map(int, minutes_hack[1][1:])
+        min_rows = list(map(int, minutes_hack[0][1:]))
+        min_cols = list(map(int, minutes_hack[1][1:]))
         n_min_led = min([len(min_rows),len(min_cols)])
         n_min_state = len(minutes_hack) - 2
         min_bitmap = zeros((n_min_state, n_min_led), int)
@@ -244,9 +244,9 @@ def readcsv(csvfile, n_row=8):
         min_bitmap = None
     return {'letters': letters,
             'data':bitmap, 
-            'rows':map(int, rows[1:]),
-            'cols':map(int, cols[1:]),
-            'lens':map(int, lens[1:]),
+            'rows':list(map(int, rows[1:])),
+            'cols':list(map(int, cols[1:])),
+            'lens':list(map(int, lens[1:])),
             'words':words[1:],
             'min_rows':min_rows,
             'min_cols':min_cols,
@@ -260,7 +260,7 @@ def bitmap(csvfile):
     import pylab as pl
     pl.pcolormesh(data['data'][::-1], cmap='binary_r')
     words = data['words']
-    words = [unicode(w, 'utf-8') for w in words]
+    words = [str(w, 'utf-8') for w in words]
     locs, tics = pl.xticks(arange(len(words)) + .5, words, rotation=90)
     pl.yticks(arange(0, 288, 12), ['%d:00' % i for i in range(24)[::-1]])
     pl.ylim(0, 288)
@@ -321,7 +321,7 @@ class ClockTHREEjr:
         self.img_num = 0
         if self.save_images:
             self.movie_dir = wtf[:-4]
-            print 'saving images in', self.movie_dir
+            print('saving images in', self.movie_dir)
             if not os.path.exists(self.movie_dir):
                 os.mkdir(self.movie_dir)
             else:
@@ -348,7 +348,7 @@ class ClockTHREEjr:
                 all_labels_off[row, col] = self.can.create_text(XOFF + dx * col, YOFF + dy * row, text=self.letters[row][col], font=self.font, fill=OFF)
         all_labels_on = {}
         self.labels_on = {}
-        print 'font', self.font
+        print('font', self.font)
         for i in range(self.N_ROW):
             for j in range(self.N_COL):
                 all_labels_on[i, j] = self.can.create_text(XOFF + dx * j, YOFF + dy * i, text=self.letters[i][j], font=self.font, fill=ON)
@@ -382,10 +382,10 @@ class ClockTHREEjr:
         self.N_ROW = self.data['n_row']
         self.N_COL = self.data['n_col']
 
-        print 'author:', self.data['author']
-        print 'email:', self.data['email']
-        print 'licence:', self.data['licence']
-        print 'description:\n', self.data['desc']
+        print('author:', self.data['author'])
+        print('email:', self.data['email'])
+        print('licence:', self.data['licence'])
+        print('description:\n', self.data['desc'])
     def askopenfont(self, *args, **kw):   
         """Returns an opened file in read mode.
         This time the dialog just returns a filename and the file is opened by your own code.
@@ -396,7 +396,7 @@ class ClockTHREEjr:
         save_update_step = self.update_step
         self.update_step = 0
 
-        filename = tkFileDialog.askopenfilename(parent=self.tk)
+        filename = tkinter.filedialog.askopenfilename(parent=self.tk)
         if filename:
             self.readwtf(filename)
             self.redraw_letters()
@@ -412,7 +412,7 @@ class ClockTHREEjr:
         save_update_step = self.update_step
         self.update_step = 0
 
-        filename = tkFileDialog.askopenfilename(parent=self.tk)
+        filename = tkinter.filedialog.askopenfilename(parent=self.tk)
         if filename:
             self.readwtf(filename)
             self.redraw_letters()
@@ -424,7 +424,7 @@ class ClockTHREEjr:
         self.update_step = 0
         outfn = None
         while outfn is None:
-            outfn = tkFileDialog.asksaveasfilename(
+            outfn = tkinter.filedialog.asksaveasfilename(
                 filetypes=[('h files', '.h')],
                 title='Save H-file')
             
@@ -557,7 +557,7 @@ class ClockTHREEjr:
                         ImageGrab.grab((int(x), int(y), 
                                         int(x) + int(w) + 10, int(y) + int(h) + 30)).save(fn)
                     elif not os.path.exists(fn): ## linux
-                        print fn
+                        print(fn)
                         os.system('import -window ClockTHREEjr %s' % fn)
                     if time5 == 288:
                         self.save_images = False
@@ -666,15 +666,15 @@ def timelist(fn):
     data = readwtf(fn)
     words = data['words']
     for i, l in enumerate(data['data']):
-        print '%02d:%02d' % divmod(i * 5, 60),
+        print('%02d:%02d' % divmod(i * 5, 60), end=' ')
         for j, bit in enumerate(l):
             if bit:
-                print words[j],
-        print
+                print(words[j], end=' ')
+        print()
                                                     
 usage = '>Simulate.py wtf font save dt'
 if __name__ == '__main__':
-    print usage
+    print(usage)
     n_row = 8
     if len(sys.argv) > 1:
         fn = sys.argv[1]

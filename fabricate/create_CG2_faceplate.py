@@ -20,12 +20,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 import glob
 import os.path
 import sys
-sys.path.append('/home/justin/Dropbox/WyoLumCode/CNC/')
-from cnc import *
-from baffles import *
 
-sys.path.append('../')
-from cnc import *
+from CNC.cnc import *
+from CNC.baffles import *
 
 from numpy import arange
 from copy import deepcopy
@@ -59,7 +56,7 @@ linewidth = 1.
 fontnames = ['HELVETICA-BOLD', 'Helvetica-Bold',
              'HELVETICA', 'Helvetica',
              ]
-fontpath = ['/home/justin/Dropbox/WyoLumCode/fonts/', '/home/justin/Documents/googlefontdirectory/']
+fontpath = ['./fonts']
 
 BAFFLE_H = 20.00 * mm - 3.9 * mm
 BAFFLE_T = .076 * inch
@@ -167,22 +164,22 @@ def add_font(fontname, path=None):
     FONTNAME = fontname.upper()
     if FONTNAME not in fontnames:
         if path is None:
-            print(path)
-            def addit(args, d, names):
+            def addit(d, names):
                 # if 'CustomerFonts' in d:
                 #     return ## skip proprietary fonts
                 for fn in names:
                     FN = fn.upper()
                     if FN[:-4] == FONTNAME and FN[-4:] == '.TTF':
+                        print('d', d, 'fn', fn)
+                        print("os.path.join(d, fn)", os.path.join(d, fn))
                         pdfmetrics.registerFont(TTFont(FN[:-4], os.path.join(d, fn)))
                         fontnames.append(FONTNAME)
-                        if not os.path.exists(os.path.join('/home/justin/Dropbox/WyoLumCode/fonts/', fn)):
-                            shutil.copy(os.path.join(d, fn), os.path.join('/home/justin/Dropbox/WyoLumCode/fonts/', fn))
                         break
             for fontdir in fontpath:
-                os.path.walk(fontdir, addit, ())
-                if FONTNAME in fontnames:
-                    break
+                for root, dirs, files in os.walk(fontdir):
+                    addit(root, files)
+                    if FONTNAME in fontnames:
+                        break
         else:
             path = '%s/%s.ttf' % (path, fontname)
             pdfmetrics.registerFont(TTFont(FONTNAME, path))
@@ -250,21 +247,21 @@ def getPCB(outline=False, leds=False, buttons=False, button_holes=True):
             pcb.drill(x, y, 2.5 * mm) # BUTTON
         if button_holes:
             button_hole(x, y, pcb)
-            pcb.addText(x, y + .25 * inch, labels[i], 'TERMINALDOSIS-MEDIUM', 12)    
+            pcb.addText(x, y + .25 * inch, labels[i], 'Ubuntu-M-hinting', 12)    
     ## thumbwheel
     x = pcb_w - .5 * inch - 5 * .6 * inch
     y = pcb_h - .5 * inch
     pcb.drill(x, y, .25 * inch)
-    pcb.addText(x, pcb_h - .4 * inch + .25 * inch, 'DIM', 'TERMINALDOSIS-MEDIUM', 12)
+    pcb.addText(x, pcb_h - .4 * inch + .25 * inch, 'DIM', 'Ubuntu-M-hinting', 12)
     pcb.rect([pcb_w - .44 * inch - .62 * inch, .44 * inch,
               .62 * inch, .12 * inch])
     x = pcb_w - .44 * inch - .62 * inch
     y = .28 * inch
     # can.drawCentredString(y - .04 * inch, -x,'GRN')
-    pcb.addText(x, y, 'G', 'TERMINALDOSIS-MEDIUM', 12)
+    pcb.addText(x, y, 'G', 'Ubuntu-M-hinting', 12)
     # can.drawCentredString(y, -x - .75 * inch,'BLK')
-    pcb.addText(x + .65 * inch, y, 'B', 'TERMINALDOSIS-MEDIUM', 12)
-    pcb.addText(x + .6 * inch / 2, y + .35 * inch, '5V FTDI', 'TERMINALDOSIS-MEDIUM', 12)
+    pcb.addText(x + .65 * inch, y, 'B', 'Ubuntu-M-hinting', 12)
+    pcb.addText(x + .6 * inch / 2, y + .35 * inch, '5V FTDI', 'Ubuntu-M-hinting', 12)
     return pcb
 
 def create_faceplate(basename, style, case, font, fontsize, reverse=True, color=None,
@@ -427,7 +424,6 @@ lower = my_lower
 upper = my_upper
 
 english2_v1 = Langs.Simulate2x.readwtf("Langs/English2_v1.wtf")['letters']
-german2_v1440 = Langs.Simulate1440.readwtf("Langs/German2_v1440.csv")['letters']
 cases = {'lower':lower,
          'UPPER':upper}
 
@@ -439,9 +435,10 @@ def main():
     font = 'david'
     font = "Helvetica-Bold"
     font = 'JosefinSans-Regular'
+    font = 'Ubuntu-M-hinting'
 
-    add_font('TerminalDosis-Medium')
-    add_font('TerminalDosis-Regular')
+    #add_font('TerminalDosis-Medium')
+    #add_font('TerminalDosis-Regular')
     add_font(font)
     case = 'UPPER'
     case = 'lower'
@@ -455,11 +452,12 @@ def main():
                      cases[case], 
                      font, fontsize, baffles=False, reverse=True, fpid=fpid, do_corner_holes=True)
     bp_can = new_canvas('Backplate')
-    create_backplate(bp_can)
-    t = MyText(15.2 * inch, .85*inch, "MASTER", centered=False)
-    t.drawOn(bp_can)
-    bp_can.save()
-    print('wrote', bp_can._filename)
+    print('skipping backplate with py3 bugs!')
+    # create_backplate(bp_can)
+    # t = MyText(15.2 * inch, .85*inch, "MASTER", centered=False)
+    #t.drawOn(bp_can)
+    #bp_can.save()
+    #print('wrote', bp_can._filename)
     baff_can = new_canvas("Baffles")
 
     localizer = MyPath()
